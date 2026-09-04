@@ -22,7 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,7 +82,7 @@ public class TrollMenuPlugin extends JavaPlugin implements Listener {
         inv.setItem(21, createItem(Material.LIGHT_BLUE_DYE, "§9🌧 §lMétéo: Orage", List.of("§8▸ §eClic §7: Déclenche orage"), "weather_storm"));
         inv.setItem(22, createItem(Material.ENDER_PEARL, "§d➤ §lTP vers cible", List.of("§7Regarde un joueur §8→ §eclique"), "tp_to"));
         inv.setItem(23, createItem(Material.COMPASS, "§e➤ §lTP cible ici", List.of("§7Regarde un joueur §8→ §eclique"), "tp_here"));
-        inv.setItem(24, createItem(Material.BED, "§a➤ §lSpawn", List.of("§8▸ §eGauche/Droit §7: Cible regardée"), "spawn"));
+        inv.setItem(24, createItem(Material.RED_BED, "§a➤ §lSpawn", List.of("§8▸ §eGauche/Droit §7: Cible regardée"), "spawn"));
         inv.setItem(25, createItem(Material.IRON_DOOR, "§c§l▸ §4Vrai Kick", List.of("§7Regarde un joueur §8→ §eclique"), "kick_real"));
         inv.setItem(26, createItem(Material.BEDROCK, "§4§l▸ §cVrai Ban", List.of("§7Regarde un joueur §8→ §eclique"), "ban_real"));
         inv.setItem(35, createItem(Material.BARRIER, "§c§l▸ §4Fermer", List.of("§8▸ §eClic §7: Fermer"), "close"));
@@ -134,8 +133,8 @@ public class TrollMenuPlugin extends JavaPlugin implements Listener {
     }
 
     private Player getTargetedPlayer(Player p) {
-        // Raycast compatible Paper 1.20.4
-        RayTraceResult ray = p.rayTraceEntities(6.0, entity -> entity instanceof Player && entity != p);
+        // Raycast compatible Paper 1.20.4 - distance en int
+        RayTraceResult ray = p.rayTraceEntities(6, entity -> entity instanceof Player && entity != p);
         if (ray != null && ray.getHitEntity() instanceof Player target) {
             return target;
         }
@@ -198,7 +197,8 @@ public class TrollMenuPlugin extends JavaPlugin implements Listener {
     }
 
     private void heal(Player target) {
-        target.setHealth(target.getAttribute(Attribute.MAX_HEALTH).getValue());
+        // Attribute.GENERIC_MAX_HEALTH pour Paper 1.20.4
+        target.setHealth(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         target.setFireTicks(0);
         target.removePotionEffect(PotionEffectType.POISON);
         target.removePotionEffect(PotionEffectType.WITHER);
@@ -252,7 +252,8 @@ public class TrollMenuPlugin extends JavaPlugin implements Listener {
     }
 
     private void giveXp(Player target, int levels) {
-        target.addExpLevels(levels);
+        // giveExpLevels au lieu de addExpLevels
+        target.giveExpLevels(levels);
         target.sendMessage("§aXP ajouté: §e" + levels + " niveaux");
     }
 
