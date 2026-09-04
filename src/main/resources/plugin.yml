@@ -1,0 +1,18 @@
+name: TrollMenuPlugin
+version: 1.0.0
+main: com.trollmenu.TrollMenuPlugin
+api-version: 1.20
+commands:
+  trollmenu:
+    description: Ouvre le menu troll/admin
+    usage: /trollmenu
+    permission: trollmenu.use
+permissions:
+  trollmenu.use:
+    description: Accès au menu troll
+    default: op
+  trollmenu.admin:
+    description: Accès complet
+    default: op
+    children:
+      trollmenu.use: true
